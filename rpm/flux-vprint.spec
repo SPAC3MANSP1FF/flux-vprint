@@ -2,7 +2,7 @@ Name:           flux-vprint
 Version:        1.0.0
 Release:        1%{?dist}
 Summary:        Turnkey ThinkPad T480 Fingerprint Reader Suite for openSUSE Tumbleweed
-License:        GPL-3.0-or-later AND MIT
+License:        GPL-2.0-only AND MIT
 URL:            https://github.com/SPAC3MANSP1FF/flux-vprint
 Source0:        %{name}-%{version}.tar.gz
 BuildArch:      noarch
@@ -38,6 +38,12 @@ udev permissions, and openSUSE PAM configuration for seamless KDE Plasma and SDD
 %make_install
 
 %post
+# Disable the stock fprintd service: it and open-fprintd.service both
+# claim the net.reactivated.Fprint D-Bus name, so both cannot run at once.
+# Mirrors bin/flux-vprint's cmd_install step 2/7.
+systemctl stop fprintd.service 2>/dev/null || true
+systemctl disable fprintd.service 2>/dev/null || true
+systemctl mask fprintd.service 2>/dev/null || true
 %service_add_post open-fprintd.service python3-validity.service open-fprintd-resume.service python3-validity-suspend-hotfix.service
 # Enable openSUSE PAM fingerprint authentication
 if [ -x /usr/sbin/pam-config ]; then
@@ -60,11 +66,15 @@ if [ $1 -eq 0 ]; then
     if [ -x /usr/sbin/pam-config ]; then
         /usr/sbin/pam-config -d --fprintd || true
     fi
+    systemctl unmask fprintd.service 2>/dev/null || true
 fi
 
 %files
 %license LICENSE
+%license core/python-validity/LICENSE
+%license core/open-fprintd/COPYING
 %doc README.md
+%doc THIRD-PARTY-LICENSES.md
 %{_bindir}/flux-vprint
 %{_prefix}/lib/flux-vprint/
 %{_udevrulesdir}/60-flux-vprint.rules

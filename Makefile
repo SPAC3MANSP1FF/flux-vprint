@@ -51,6 +51,13 @@ install:
 	# Python Core Drivers
 	cd core/open-fprintd && python3 setup.py install --prefix=$(PREFIX) --root=$(if $(DESTDIR),$(DESTDIR),/)
 	cd core/python-validity && python3 setup.py install --prefix=$(PREFIX) --root=$(if $(DESTDIR),$(DESTDIR),/)
+	# python-validity's setup.py installs dbus-service via data_files, not
+	# scripts=[...]. setuptools' data_files install strips executable
+	# permissions regardless of the source file's mode, so this must be
+	# re-asserted after every install or systemd fails with "Permission
+	# denied" at EXEC. See bin/flux-vprint's cmd_install for the same fix
+	# applied to the standalone (non-RPM) install path.
+	chmod +x $(DESTDIR)$(LIBDIR)/python-validity/dbus-service
 
 uninstall:
 	@echo "Uninstalling flux-vprint..."
