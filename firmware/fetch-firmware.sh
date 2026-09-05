@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 # ==============================================================================
 # flux-vprint: fetch-firmware.sh
 # Downloads official Lenovo Windows driver & extracts proprietary sensor firmware

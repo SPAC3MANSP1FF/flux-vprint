@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 # ==============================================================================
 # flux-vprint: Main CLI Management & Control Tool
 # Turnkey Fingerprint Reader Manager for ThinkPad T480 on openSUSE Tumbleweed

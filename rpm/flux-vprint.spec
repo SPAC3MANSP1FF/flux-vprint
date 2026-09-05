@@ -16,6 +16,7 @@ Requires:       fprintd
 Requires:       fprintd-pam
 Requires:       python3-pyusb
 Requires:       python3-cryptography
+Requires:       python3-PyYAML
 Requires:       python3-dbus-python
 Requires:       python3-gobject
 Requires:       systemd
@@ -42,6 +43,9 @@ cp core/open-fprintd/COPYING COPYING-open-fprintd
 
 %install
 %make_install
+
+%pre
+%service_add_pre open-fprintd.service python3-validity.service open-fprintd-resume.service python3-validity-suspend-hotfix.service
 
 %post
 # Disable the stock fprintd service: it and open-fprintd.service both
