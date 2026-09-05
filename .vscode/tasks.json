@@ -1,0 +1,86 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Check Status",
+            "type": "shell",
+            "command": "./bin/flux-vprint status",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Install & Activate Services",
+            "type": "shell",
+            "command": "sudo ./bin/flux-vprint install",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Enroll Fingerprint",
+            "type": "shell",
+            "command": "./bin/flux-vprint enroll",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Test Fingerprint Verification",
+            "type": "shell",
+            "command": "./bin/flux-vprint test",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Fetch Sensor Firmware",
+            "type": "shell",
+            "command": "sudo ./bin/flux-vprint fetch-fw",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Factory Reset Sensor",
+            "type": "shell",
+            "command": "sudo ./bin/flux-vprint reset",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Uninstall flux-vprint",
+            "type": "shell",
+            "command": "sudo ./bin/flux-vprint uninstall",
+            "group": "none",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
+

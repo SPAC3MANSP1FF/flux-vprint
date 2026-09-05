@@ -1,0 +1,109 @@
+python-validity (0.15~ppa2) noble; urgency=medium
+
+  * Change all write paths to /var/run/python-validity
+  * Use a different partition table + signature for 0090 devices
+  * Docs fixes
+  * switch to noble
+
+ -- unicorn <viktor.dragomiretskyy@gmail.com>  Mon, 09 Jun 2025 20:19:55 +1200
+
+python-validity (0.14~ppa1) bionic; urgency=medium
+
+  * Retry establishing TLS on Resume in case if it was already established. 
+
+ -- unicorn <viktor.dragomiretskyy@gmail.com>  Fri, 03 Jun 2022 08:27:55 +1200
+
+python-validity (0.13~ppa1) bionic; urgency=medium
+
+  * Bugfixes
+  * Support for 138a:009d
+  * Fedora installation items
+
+ -- unicorn <viktor.dragomiretskyy@gmail.com>  Sun, 26 Sep 2021 13:03:20 +1300
+
+python-validity (0.12~ppa1) bionic; urgency=medium
+
+  * Implement Suspend/Resume methods to reset the TLS state 
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Sat, 17 Oct 2020 17:51:14 +1300
+
+python-validity (0.11~ppa1) bionic; urgency=medium
+
+  * Support multiple fingers on DBus service
+  * Config file for SID mapping
+  * Run restart service on hybrid sleep as well
+  * Major code cleanup
+  * Verify hash of downloaded drivers
+  * Update python3-validity-suspend-restart.service
+  * Add installation instructions for Arch Linux
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Thu, 10 Sep 2020 20:07:51 +1200
+
+python-validity (0.9~ppa1) bionic; urgency=medium
+
+  * Actually check which user was passed to VerifyStart
+  * Don't touch the Machine GUID record (windows co-existance)
+  * Notify the framework when a finger is selected
+  * Infer a point on a curve from the private part (windows co-existance)
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Mon, 03 Aug 2020 23:59:30 +1200
+
+python-validity (0.8~ppa1) bionic; urgency=medium
+
+  * Rollback the async changes to enroll()/identify()
+  * Call the cleanup command even when underlying command has failed()
+  * Add a service to restart python-validity on suspend/resume
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Fri, 17 Jul 2020 00:25:13 +1200
+
+python-validity (0.7~ppa1) bionic; urgency=medium
+
+  * Use single instance of a systemd service (at least for now)
+  * Switch to use logger instead of prints
+  * Catch signals to enforce graceful shutdown
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Mon, 13 Jul 2020 17:49:58 +1200
+
+python-validity (0.6~ppa1) bionic; urgency=medium
+
+  * Add dependency on innoextract 
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Mon, 13 Jul 2020 11:30:03 +1200
+
+python-validity (0.5~ppa1) bionic; urgency=medium
+
+  * Incrementally pair with the device. 
+  * Try downloading the firmware from postinst. 
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Sun, 12 Jul 2020 14:50:31 +1200
+
+python-validity (0.4~ppa1) bionic; urgency=medium
+
+  * Attempt to start from udev
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Sun, 12 Jul 2020 04:09:30 +1200
+
+python-validity (0.3~ppa2) bionic; urgency=medium
+
+  * Add missing dbus conf file
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Sat, 11 Jul 2020 12:33:19 +1200
+
+python-validity (0.3~ppa1) bionic; urgency=medium
+
+  * Don't need to own a well-known bus name any more.
+  * Allow open-fprintd call our methods.
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Sat, 11 Jul 2020 05:40:12 +1200
+
+python-validity (0.2~ppa1) bionic; urgency=medium
+
+  * Fix scripts.
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Sat, 11 Jul 2020 02:42:56 +1200
+
+python-validity (0.1~ppa1) bionic; urgency=medium
+
+  * Initial release.
+
+ -- uunicorn <viktor.dragomiretskyy@gmail.com>  Fri, 10 Jul 2020 17:21:35 +1200

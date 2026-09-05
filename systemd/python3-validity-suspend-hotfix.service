@@ -1,0 +1,17 @@
+[Unit]
+Description=Validity Fingerprint Reader Suspend Hotfix (flux-vprint)
+After=hibernate.target
+After=hybrid-sleep.target
+After=suspend.target
+After=suspend-then-hibernate.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/systemctl --no-block restart python3-validity.service open-fprintd.service
+
+[Install]
+WantedBy=hibernate.target
+WantedBy=hybrid-sleep.target
+WantedBy=suspend.target
+WantedBy=suspend-then-hibernate.target
+

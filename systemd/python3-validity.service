@@ -1,0 +1,16 @@
+[Unit]
+Description=Validity Fingerprint Reader Service (flux-vprint)
+Documentation=https://github.com/uunicorn/python-validity
+Wants=open-fprintd.service
+After=open-fprintd.service
+
+[Service]
+Type=simple
+ExecStartPre=/usr/bin/mkdir -p /run/python-validity
+ExecStart=/usr/lib/python-validity/dbus-service --debug
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target
+

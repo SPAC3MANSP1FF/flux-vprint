@@ -1,0 +1,11 @@
+#! /bin/sh
+
+set -e
+
+#if [ -x "/usr/bin/deb-systemd-invoke" ] && [ "$1" = remove ]; then
+#    deb-systemd-invoke stop 'python3-validity.service' || true
+#fi
+
+#DEBHELPER#
+
+exit 0

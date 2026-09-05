@@ -1,0 +1,31 @@
+# udev rules for Validity / Synaptics Fingerprint Readers
+# Part of flux-vprint for openSUSE Tumbleweed
+
+SUBSYSTEM!="usb", GOTO="flux_vprint_end"
+ENV{DEVTYPE}!="usb_device", GOTO="flux_vprint_end"
+
+# Supported Validity/Synaptics Sensors
+# 06cb:009a - ThinkPad T480, X1 Carbon 6th Gen, etc.
+ATTRS{idVendor}=="06cb", ATTRS{idProduct}=="009a", GOTO="flux_vprint_match"
+# 138a:0090 - ThinkPad T460, X1 Carbon 4th Gen, etc.
+ATTRS{idVendor}=="138a", ATTRS{idProduct}=="0090", GOTO="flux_vprint_match"
+# 138a:0097 - ThinkPad T470, X1 Carbon 5th Gen, etc.
+ATTRS{idVendor}=="138a", ATTRS{idProduct}=="0097", GOTO="flux_vprint_match"
+# 06cb:009d
+ATTRS{idVendor}=="06cb", ATTRS{idProduct}=="009d", GOTO="flux_vprint_match"
+
+GOTO="flux_vprint_end"
+
+LABEL="flux_vprint_match"
+# Grant permissions to input group and logged-in user
+MODE="0660"
+GROUP="input"
+TAG+="uaccess"
+TAG+="systemd"
+
+# Auto-manage power control and notify service
+ACTION=="add|change", ATTR{power/control}="auto", RUN+="/usr/bin/systemctl --no-block restart python3-validity.service"
+ACTION=="remove", RUN+="/usr/bin/systemctl --no-block stop python3-validity.service"
+
+LABEL="flux_vprint_end"
+

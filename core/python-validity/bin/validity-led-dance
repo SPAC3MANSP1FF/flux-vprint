@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import os
+from binascii import unhexlify
+from time import sleep
+
+from validitysensor import init
+from validitysensor.sensor import glow_start_scan, glow_end_scan
+from validitysensor.tls import tls
+from validitysensor.util import assert_status
+
+if __name__ == "__main__":
+    if os.geteuid() != 0:
+        raise Exception('This script needs to be executed as root')
+
+    init.open()
+
+    for i in range(0, 10):
+        glow_start_scan()
+        sleep(0.05)
+        glow_end_scan()
+        sleep(0.05)
+
+    led_script = unhexlify('39ff100000ff03000001ff002000000000ffff0000ffff0000ff03000001ff00'
+                           '200000000000000000ffff0000ff03000001ff002000000000ffff0000000000'
+                           '0000000000000000000000000000000000000000000000000000000000000000'
+                           '0000000000000000000000000000000000000000000000000000000000')
+
+    assert_status(tls.app(led_script))

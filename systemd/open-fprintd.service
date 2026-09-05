@@ -1,0 +1,16 @@
+[Unit]
+Description=Open FPrint Daemon (flux-vprint)
+Documentation=https://github.com/uunicorn/open-fprintd
+Conflicts=fprintd.service
+After=dbus.service
+
+[Service]
+Type=dbus
+BusName=net.reactivated.Fprint
+ExecStart=/usr/lib/open-fprintd/open-fprintd --debug
+Restart=on-failure
+RestartSec=2s
+
+[Install]
+WantedBy=multi-user.target
+
