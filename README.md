@@ -112,6 +112,15 @@ This resets the sensor crypto pairing keys so Linux can claim the device.
 sudo systemctl restart python3-validity.service open-fprintd.service
 ```
 
+### Status shows "Sensor not responding to query yet" and won't clear
+The underlying driver (`python-validity`) has a built-in restart-storm guard: if the service is restarted more than 10 times within 60 seconds (for any reason — a crash loop, repeated manual restarts while troubleshooting, etc.), it refuses to open the sensor at all on its next start, even though systemd will still show it as `active (running)`. If `status` stays stuck like this even after a clean restart:
+```bash
+sudo systemctl stop python3-validity.service
+sudo truncate -s 0 /run/python-validity/backoff
+sudo systemctl start python3-validity.service
+```
+Avoid restarting the service again for about a minute afterward, or the counter can refill before the sensor finishes initializing.
+
 ---
 
 ## 📦 Project Structure
@@ -143,11 +152,17 @@ flux-vprint/
 │   └── tasks.json             # 1-click VS Code tasks (Status, Install, Enroll, Test)
 ├── Makefile                   # Installation & deployment automation
 ├── README.md
-└── LICENSE                    # GPL-3.0 License
+├── THIRD-PARTY-LICENSES.md    # Attribution for vendored python-validity (MIT) and open-fprintd (GPLv2)
+└── LICENSE                    # GPL-2.0-only License
 ```
 
 ---
 
 ## 📄 License
-This project combines components licensed under GPL-3.0 and MIT. See the `LICENSE` file for full terms.
+`flux-vprint` itself is licensed under GPL-2.0-only. It vendors modified
+copies of two upstream projects under `core/`, each under their own
+original license: `python-validity` (MIT) and `open-fprintd` (GPLv2). See
+`LICENSE` for the full terms and `THIRD-PARTY-LICENSES.md` for a
+breakdown of what's bundled, where it came from, and what's been
+modified.
 
