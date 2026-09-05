@@ -63,7 +63,10 @@ class Usb:
 
         self.dev = dev
         self.dev.default_timeout = 15000
-        dev.set_configuration()
+        try:
+            dev.set_configuration()
+        except ucore.USBError:
+            pass
 
     def close(self):
         if self.dev is not None:
