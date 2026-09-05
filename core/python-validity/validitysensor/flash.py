@@ -105,6 +105,18 @@ def get_fw_info(partition: int):
     if len(rsp) == 2 and rsp[1] == 4 and rsp[0] == 0xb0:
         return None
 
+    # flux-vprint patch (06cb:009a busy-status fix): a "signature validation
+    # failed" status (0x044f) on the fwext partition means whatever is
+    # currently stored there isn't valid signed firmware (e.g. a factory-
+    # fresh or reset flash) rather than a real hardware fault. Treat it the
+    # same as "no firmware detected" so upload_fwext() re-uploads a fresh,
+    # correctly signed copy instead of crashing. See:
+    # https://github.com/uunicorn/python-validity/issues/272
+    status, = unpack('<H', rsp[:2])
+    if status == 0x044f:
+        logging.info('Fwext signature validation failed; treating as no firmware, will re-upload')
+        return None
+
     assert_status(rsp)
     rsp = rsp[2:]
     hdr = rsp[:0xa]

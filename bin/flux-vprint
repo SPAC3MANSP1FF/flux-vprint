@@ -106,8 +106,12 @@ cmd_status() {
         echo -e "${YELLOW}${BOLD}DISABLED${NC}"
     fi
 
-     # 4. openSUSE PAM Status
+    # 4. openSUSE PAM Status
     echo -ne "  [4/5] openSUSE PAM Auth:       "
+    # flux-vprint patch: `pam-config -q --fp` produces no parseable output on
+    # this openSUSE Tumbleweed version, so it can never match the grep below
+    # even when PAM is correctly configured. Check the real PAM stack file
+    # directly instead, which is the actual source of truth.
     if grep -qs "pam_fprintd.so" /etc/pam.d/common-auth-pc 2>/dev/null; then
         echo -e "${GREEN}${BOLD}ENABLED${NC} (Fingerprint login & sudo active)"
     else
@@ -208,7 +212,7 @@ cmd_install() {
     bash "${PROJECT_ROOT}/firmware/fetch-firmware.sh" "/usr/share/python-validity"
 
     echo -e "${BLUE}[7/7] Configuring openSUSE PAM and activating services...${NC}"
-    /usr/sbin/pam-config -a --fprintd
+    /usr/sbin/pam-config -a --fp
 
     systemd-tmpfiles --create /usr/lib/tmpfiles.d/flux-vprint-tmpfiles.conf 2>/dev/null || true
     udevadm control --reload-rules
@@ -326,7 +330,7 @@ cmd_reset() {
 cmd_setup_pam() {
     require_root "setup-pam"
     echo -e "${BLUE}[*] Enabling fingerprint authentication in openSUSE PAM...${NC}"
-    /usr/sbin/pam-config -a --fprintd
+    /usr/sbin/pam-config -a --fp
     echo -e "${GREEN}[+] Fingerprint PAM module enabled.${NC}"
 }
 
@@ -342,7 +346,7 @@ cmd_uninstall() {
     fi
 
     echo -e "${BLUE}[*] Disabling PAM fingerprint auth...${NC}"
-    /usr/sbin/pam-config -d --fprintd 2>/dev/null || true
+    /usr/sbin/pam-config -d --fp 2>/dev/null || true
 
     echo -e "${BLUE}[*] Stopping and disabling services...${NC}"
     systemctl disable --now open-fprintd.service python3-validity.service open-fprintd-resume.service python3-validity-suspend-hotfix.service 2>/dev/null || true

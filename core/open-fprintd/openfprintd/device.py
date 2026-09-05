@@ -162,6 +162,26 @@ class Device(dbus.service.Object):
 
         return self.target.DeleteEnrolledFingers(self.claimed_by, signature='s')
 
+    # flux-vprint patch: the standard net.reactivated.Fprint.Device interface
+    # includes DeleteEnrolledFinger(finger_name) for removing a single named
+    # print, distinct from the "delete everything" methods above. This was
+    # missing entirely, causing clients that delete one specific finger
+    # (e.g. KDE's fingerprint settings module) to fail with
+    # org.freedesktop.DBus.Error.UnknownMethod. See fprintd's D-Bus API spec:
+    # net.reactivated.Fprint.Device.
+    @dbus.service.method(dbus_interface=INTERFACE_NAME,
+                         in_signature='s',
+                         out_signature='',
+                         connection_keyword='connection',
+                         sender_keyword='sender')
+    def DeleteEnrolledFinger(self, finger_name, sender, connection):
+        logging.debug('DeleteEnrolledFinger: %s' % finger_name)
+
+        if self.owner_watcher is None or self.claim_sender != sender:
+            raise ClaimDevice()
+
+        return self.target.DeleteEnrolledFinger(self.claimed_by, finger_name, signature='ss')
+
     # ------------------ Claim/Release --------------------------
 
     @dbus.service.method(dbus_interface=INTERFACE_NAME,

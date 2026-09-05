@@ -81,9 +81,10 @@ class Usb:
         # self.dev.set_configuration()
 
         # flux-vprint patch (06cb:009a busy-status fix): this sensor can
-        # reply with a transient busy status (0x0104) to the first command(s)
-        # after it wakes up, and only returns valid data on a later attempt.
-        # Retry for a couple seconds before giving up. See:
+        # reply with a transient busy status (0x0401, raw bytes 01 04 read
+        # little-endian) to the first command(s) after it wakes up, and only
+        # returns valid data on a later attempt. Retry for a couple seconds
+        # before giving up. See:
         # https://github.com/uunicorn/python-validity/issues/272
         def cmd_with_busy_retry(payload, tries=20, delay=0.5):
             for attempt in range(tries):

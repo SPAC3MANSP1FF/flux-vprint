@@ -103,6 +103,26 @@ class Device(dbus.service.Object):
 
         db.del_record(usr.dbid)
 
+    # flux-vprint patch: DeleteEnrolledFingers (above) wipes every finger for
+    # a user by deleting their entire user record. The standard fprintd API
+    # also needs a way to delete just ONE named finger. Each finger already
+    # has its own dbid distinct from the user's (see db.parse_user), so we
+    # can delete a single finger's record without touching the rest.
+    @dbus.service.method(dbus_interface=INTERFACE_NAME, in_signature='ss', out_signature='')
+    def DeleteEnrolledFinger(self, user, finger_name):
+        logging.debug('In DeleteEnrolledFinger %s for %s' % (finger_name, user))
+        usr = self.user2record(user)
+
+        if usr is None:
+            raise NoEnrolledPrints()
+
+        match = [f for f in usr.fingers if subtype_to_string(f['subtype']) == finger_name]
+
+        if not match:
+            raise NoEnrolledPrints()
+
+        db.del_record(match[0]['dbid'])
+
     @dbus.service.method(dbus_interface=INTERFACE_NAME, in_signature='ss', out_signature='')
     def VerifyStart(self, user, finger):
         logging.debug('In VerifyStart for %s, %s' % (user, finger))
