@@ -21,7 +21,7 @@ This single command will:
 * ✅ Install needed openSUSE packages (`innoextract`, `pyusb`, `cryptography`, `fprintd-pam`, etc.)
 * ✅ Download and extract the official Lenovo firmware directly to persistent storage
 * ✅ Deploy the driver and standard D-Bus fingerprint services
-* ✅ Configure openSUSE PAM (`pam-config -a --fp`) so the login screen, lock screen, and `sudo` recognize your fingerprint
+* ✅ Configure openSUSE PAM (`pam-config -a --fprintd`) so the login screen, lock screen, and `sudo` recognize your fingerprint
 * ✅ Enable sleep/resume hooks so your fingerprint reader continues working after laptop suspend
 
 ### 2. Enroll Your Fingerprint
@@ -89,7 +89,7 @@ sudo flux-vprint uninstall
 *(Or if you haven't installed the global shortcut yet: `sudo ./bin/flux-vprint uninstall`)*
 
 This cleanly:
-* ✅ Reverts openSUSE PAM (`pam-config -d --fp`) so your system returns to standard password authentication
+* ✅ Reverts openSUSE PAM (`pam-config -d --fprintd`) so your system returns to standard password authentication
 * ✅ Stops and disables all fingerprint services
 * ✅ Unmasks the default `fprintd` service
 * ✅ Removes all created systemd services, udev rules, D-Bus policies, and firmware files

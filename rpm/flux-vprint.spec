@@ -41,7 +41,7 @@ udev permissions, and openSUSE PAM configuration for seamless KDE Plasma and SDD
 %service_add_post open-fprintd.service python3-validity.service open-fprintd-resume.service python3-validity-suspend-hotfix.service
 # Enable openSUSE PAM fingerprint authentication
 if [ -x /usr/sbin/pam-config ]; then
-    /usr/sbin/pam-config -a --fp || true
+    /usr/sbin/pam-config -a --fprintd || true
 fi
 # Automatically extract firmware if network is available
 if [ -x %{_prefix}/lib/flux-vprint/fetch-firmware.sh ]; then
@@ -58,7 +58,7 @@ udevadm trigger 2>/dev/null || true
 %service_del_postun open-fprintd.service python3-validity.service open-fprintd-resume.service python3-validity-suspend-hotfix.service
 if [ $1 -eq 0 ]; then
     if [ -x /usr/sbin/pam-config ]; then
-        /usr/sbin/pam-config -d --fp || true
+        /usr/sbin/pam-config -d --fprintd || true
     fi
 fi
 
