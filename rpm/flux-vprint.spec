@@ -30,6 +30,12 @@ udev permissions, and openSUSE PAM configuration for seamless KDE Plasma and SDD
 
 %prep
 %autosetup
+# The vendored python-validity LICENSE and open-fprintd COPYING share a
+# basename with the top-level LICENSE (or with each other's convention).
+# %license copies by basename into a single shared licensedir, so without
+# renaming, one silently overwrites another at the same destination path.
+cp core/python-validity/LICENSE LICENSE-python-validity
+cp core/open-fprintd/COPYING COPYING-open-fprintd
 
 %build
 # Pure Python modules built during install
@@ -71,8 +77,8 @@ fi
 
 %files
 %license LICENSE
-%license core/python-validity/LICENSE
-%license core/open-fprintd/COPYING
+%license LICENSE-python-validity
+%license COPYING-open-fprintd
 %doc README.md
 %doc THIRD-PARTY-LICENSES.md
 %{_bindir}/flux-vprint
@@ -92,6 +98,10 @@ fi
 %{python3_sitelib}/*.egg-info
 %{_prefix}/lib/python-validity/
 %{_prefix}/lib/open-fprintd/
+%{_bindir}/validity-led-dance
+%{_bindir}/validity-sensors-firmware
+%{_datadir}/dbus-1/system-services/net.reactivated.Fprint.service
+%{_datadir}/python-validity/playground/
 
 %changelog
 * Fri Sep 04 2026 Chris <chris@localhost> - 1.0.0-1
