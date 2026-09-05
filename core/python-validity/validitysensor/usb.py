@@ -1,5 +1,6 @@
 import errno
 import logging
+import time
 import typing
 from binascii import hexlify, unhexlify
 from enum import Enum
@@ -63,10 +64,7 @@ class Usb:
 
         self.dev = dev
         self.dev.default_timeout = 15000
-        try:
-            dev.set_configuration()
-        except ucore.USBError:
-            pass
+        dev.set_configuration()
 
     def close(self):
         if self.dev is not None:
@@ -82,13 +80,29 @@ class Usb:
     def send_init(self):
         # self.dev.set_configuration()
 
+        # flux-vprint patch (06cb:009a busy-status fix): this sensor can
+        # reply with a transient busy status (0x0104) to the first command(s)
+        # after it wakes up, and only returns valid data on a later attempt.
+        # Retry for a couple seconds before giving up. See:
+        # https://github.com/uunicorn/python-validity/issues/272
+        def cmd_with_busy_retry(payload, tries=20, delay=0.5):
+            for attempt in range(tries):
+                rsp = self.cmd(unhexlify(payload))
+                status, = unpack('<H', rsp[:2])
+                if status == 0x0104:
+                    logging.info('Sensor busy (0x0104), retrying (%d/%d)' % (attempt + 1, tries))
+                    time.sleep(delay)
+                    continue
+                return rsp
+            return rsp
+
         # TODO analyse responses, detect hardware type
-        assert_status(self.cmd(unhexlify('01')))  # RomInfo.get()
+        assert_status(cmd_with_busy_retry('01'))  # RomInfo.get()
         assert_status(self.cmd(unhexlify('19')))
 
         # 43 -- get partition header(?) (02 -- fwext partition)
         # c28c745a in response is a FwextBuildtime = 0x5A748CC2
-        rsp = self.cmd(unhexlify('4302'))  # get_fw_info()
+        rsp = cmd_with_busy_retry('4302')  # get_fw_info()
 
         assert_status(self.cmd(init_hardcoded))
 

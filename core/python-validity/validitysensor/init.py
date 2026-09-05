@@ -28,8 +28,12 @@ def close():
 
 def open_common():
     init_data_dir()
-    init_flash()
+    # flux-vprint patch (06cb:009a busy-status fix): usb.send_init() must run
+    # BEFORE init_flash(). On this sensor, calling init_flash() first makes
+    # the protected-flash commands time out. See:
+    # https://github.com/uunicorn/python-validity/issues/272
     usb.send_init()
+    init_flash()
     tls.parse_tls_flash(read_tls_flash())
     tls.open()
     upload_fwext()
