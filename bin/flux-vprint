@@ -181,6 +181,13 @@ cmd_install() {
     if [[ -d "${PROJECT_ROOT}/core/python-validity" ]]; then
         (cd "${PROJECT_ROOT}/core/python-validity" && python3 setup.py install --prefix=/usr --root=/ >/dev/null)
         rm -rf "${PROJECT_ROOT}/core/python-validity/build" "${PROJECT_ROOT}/core/python-validity/dist" "${PROJECT_ROOT}/core/python-validity/"*.egg-info
+        # flux-vprint patch: python-validity's setup.py installs dbus-service
+        # via data_files, not scripts=[...]. setuptools' data_files install
+        # strips executable permissions regardless of the source file's
+        # mode, so systemd fails with "Permission denied" at EXEC every
+        # time this is (re)installed. Re-assert it here rather than patching
+        # upstream's setup.py.
+        chmod +x /usr/lib/python-validity/dbus-service
     fi
 
     echo -e "${BLUE}[4/7] Deploying configuration, D-Bus policies, and udev rules...${NC}"
@@ -212,7 +219,10 @@ cmd_install() {
     bash "${PROJECT_ROOT}/firmware/fetch-firmware.sh" "/usr/share/python-validity"
 
     echo -e "${BLUE}[7/7] Configuring openSUSE PAM and activating services...${NC}"
-    /usr/sbin/pam-config -a --fp
+    # flux-vprint patch: --fp maps to the legacy, no-longer-installed
+    # pam_fp.so module on modern openSUSE Tumbleweed. --fprintd is the
+    # correct flag, mapping to the actually-installed pam_fprintd.so.
+    /usr/sbin/pam-config -a --fprintd
 
     systemd-tmpfiles --create /usr/lib/tmpfiles.d/flux-vprint-tmpfiles.conf 2>/dev/null || true
     udevadm control --reload-rules
@@ -330,7 +340,10 @@ cmd_reset() {
 cmd_setup_pam() {
     require_root "setup-pam"
     echo -e "${BLUE}[*] Enabling fingerprint authentication in openSUSE PAM...${NC}"
-    /usr/sbin/pam-config -a --fp
+    # flux-vprint patch: --fp maps to the legacy, no-longer-installed
+    # pam_fp.so module on modern openSUSE Tumbleweed. --fprintd is the
+    # correct flag, mapping to the actually-installed pam_fprintd.so.
+    /usr/sbin/pam-config -a --fprintd
     echo -e "${GREEN}[+] Fingerprint PAM module enabled.${NC}"
 }
 
@@ -346,7 +359,10 @@ cmd_uninstall() {
     fi
 
     echo -e "${BLUE}[*] Disabling PAM fingerprint auth...${NC}"
-    /usr/sbin/pam-config -d --fp 2>/dev/null || true
+    # flux-vprint patch: --fp maps to the legacy, no-longer-installed
+    # pam_fp.so module on modern openSUSE Tumbleweed. --fprintd is the
+    # correct flag, mapping to the actually-installed pam_fprintd.so.
+    /usr/sbin/pam-config -d --fprintd 2>/dev/null || true
 
     echo -e "${BLUE}[*] Stopping and disabling services...${NC}"
     systemctl disable --now open-fprintd.service python3-validity.service open-fprintd-resume.service python3-validity-suspend-hotfix.service 2>/dev/null || true
