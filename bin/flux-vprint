@@ -106,9 +106,9 @@ cmd_status() {
         echo -e "${YELLOW}${BOLD}DISABLED${NC}"
     fi
 
-    # 4. openSUSE PAM Status
+     # 4. openSUSE PAM Status
     echo -ne "  [4/5] openSUSE PAM Auth:       "
-    if /usr/sbin/pam-config -q --fprintd 2>/dev/null | grep -q "pam_fprintd.so"; then
+    if grep -qs "pam_fprintd.so" /etc/pam.d/common-auth-pc 2>/dev/null; then
         echo -e "${GREEN}${BOLD}ENABLED${NC} (Fingerprint login & sudo active)"
     else
         echo -e "${YELLOW}${BOLD}DISABLED${NC} (Run 'sudo flux-vprint setup-pam')"
