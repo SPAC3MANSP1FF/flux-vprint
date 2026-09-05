@@ -89,8 +89,8 @@ class Usb:
             for attempt in range(tries):
                 rsp = self.cmd(unhexlify(payload))
                 status, = unpack('<H', rsp[:2])
-                if status == 0x0104:
-                    logging.info('Sensor busy (0x0104), retrying (%d/%d)' % (attempt + 1, tries))
+                if status == 0x0401:
+                    logging.info('Sensor busy (0x0401), retrying (%d/%d)' % (attempt + 1, tries))
                     time.sleep(delay)
                     continue
                 return rsp
