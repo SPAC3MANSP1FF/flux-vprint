@@ -384,6 +384,14 @@ cmd_uninstall() {
     rm -rf /etc/python-validity
     rm -rf /var/cache/flux-vprint
     rm -rf /run/python-validity
+    # flux-vprint patch: open-fprintd's setup.py installs a D-Bus
+    # service-activation descriptor separately from the executable it
+    # points at. Without removing it too, dbus-daemon will still try to
+    # auto-activate net.reactivated.Fprint after uninstall by launching a
+    # binary that no longer exists, which can hang or fail session-startup
+    # sequences (observed specifically breaking KDE Plasma Wayland login,
+    # while X11 tolerated it silently).
+    rm -f /usr/share/dbus-1/system-services/net.reactivated.Fprint.service
     rm -f /usr/bin/flux-vprint
 
     systemctl daemon-reload
