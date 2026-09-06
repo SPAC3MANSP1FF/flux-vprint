@@ -1,28 +1,41 @@
-# flux-vprint 🔒🖐️
+# flux-vprint 💻🔒☝️
 
-**Turnkey Fingerprint Reader Suite for ThinkPad T480 on openSUSE Tumbleweed**
+I had a frustrating time trying to get fingerprint login working on my ThinkPad T480 running openSUSE Tumbleweed. Between `fprintd` quirks and the proprietary Synaptics `python-validity` driver, it just wouldn't play nice out of the box. I even tested other distributions like Ubuntu where it reportedly "just works", and still had no luck.
 
-`flux-vprint` is an automated, zero-headache service and management tool designed to make the **Synaptics MIS Touch fingerprint sensor (`06cb:009a`)** work out of the box on **openSUSE Tumbleweed** with full **KDE Plasma** and **SDDM** login screen support.
+So, I built `flux-vprint` to fix it for my distro of choice.
+
+It handles the hardware driver setup, downloads the required Lenovo firmware, wires up systemd services, and configures openSUSE PAM so you can actually log in, unlock your screen, and authenticate `sudo` with your fingerprint reader (`06cb:009a`). I built and tested this specifically on my T480 with KDE Plasma and SDDM, but it should help anyone running similar hardware on openSUSE.
 
 ---
 
-## 🚀 Quick Start (1-Minute Setup)
+## 🚀 Quick Start
 
-You do **not** need to be a developer or tinker with system files. Everything is automated:
+### 1. Install flux-vprint
 
-### 1. Clone & Run the Installer
+#### Option 1: Install via openSUSE Zypper (Recommended)
+
+Add the Open Build Service (OBS) repository and install using `zypper`:
+
+```bash
+# Add the OBS repository
+sudo zypper ar -f https://download.opensuse.org/repositories/home:/SPAC3MANSP1FF/openSUSE_Tumbleweed/home:SPAC3MANSP1FF.repo
+
+# Refresh repositories and install
+sudo zypper ref
+sudo zypper in flux-vprint
+```
+
+That's it — installing the package automatically configures PAM and fetches the required firmware for you. You're ready to enroll a fingerprint.
+
+#### Option 2: Build & Install from Source
+
+If you prefer to build or inspect the source directly:
+
 ```bash
 git clone https://github.com/SPAC3MANSP1FF/flux-vprint.git
 cd flux-vprint
 sudo ./bin/flux-vprint install
 ```
-
-This single command will:
-* ✅ Install needed openSUSE packages (`innoextract`, `pyusb`, `cryptography`, `fprintd-pam`, etc.)
-* ✅ Download and extract the official Lenovo firmware directly to persistent storage
-* ✅ Deploy the driver and standard D-Bus fingerprint services
-* ✅ Configure openSUSE PAM (`pam-config -a --fprintd`) so the login screen, lock screen, and `sudo` recognize your fingerprint
-* ✅ Enable sleep/resume hooks so your fingerprint reader continues working after laptop suspend
 
 ### 2. Enroll Your Fingerprint
 Once installation finishes, you can enroll your finger either through the terminal or directly inside KDE Plasma:
@@ -165,4 +178,3 @@ original license: `python-validity` (MIT) and `open-fprintd` (GPLv2). See
 `LICENSE` for the full terms and `THIRD-PARTY-LICENSES.md` for a
 breakdown of what's bundled, where it came from, and what's been
 modified.
-
