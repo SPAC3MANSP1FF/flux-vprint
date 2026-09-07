@@ -1,5 +1,5 @@
 Name:           flux-vprint
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Turnkey ThinkPad T480 Fingerprint Reader Suite for openSUSE Tumbleweed
 License:        GPL-2.0-only AND MIT
@@ -95,6 +95,8 @@ fi
 %{_unitdir}/python3-validity-suspend-hotfix.service
 %dir %{_sysconfdir}/python-validity
 %config(noreplace) %{_sysconfdir}/python-validity/dbus-service.yaml
+%dir %{_datadir}/dbus-1
+%dir %{_datadir}/dbus-1/system.d
 %{_datadir}/dbus-1/system.d/net.reactivated.Fprint.conf
 %{_datadir}/dbus-1/system.d/io.github.uunicorn.Fprint.conf
 %{python3_sitelib}/validitysensor/
@@ -104,7 +106,9 @@ fi
 %{_prefix}/lib/open-fprintd/
 %{_bindir}/validity-led-dance
 %{_bindir}/validity-sensors-firmware
+%dir %{_datadir}/dbus-1/system-services
 %{_datadir}/dbus-1/system-services/net.reactivated.Fprint.service
+%dir %{_datadir}/python-validity
 %{_datadir}/python-validity/playground/
 
 %changelog

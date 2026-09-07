@@ -75,9 +75,19 @@ if ! command -v innoextract >/dev/null 2>&1; then
     if command -v zypper >/dev/null 2>&1 && [[ $EUID -eq 0 ]]; then
         echo -e "${BLUE}[*]${NC} Attempting to install innoextract via zypper..."
         zypper --non-interactive in innoextract
-    else
-        echo -e "${RED}[ERROR]${NC} Please install 'innoextract' first (e.g. sudo zypper in innoextract)"
-        exit 1
+    fi
+    if ! command -v innoextract >/dev/null 2>&1; then
+        # flux-vprint patch: don't hard-fail here. This script runs from
+        # %post during RPM install, and some verification environments
+        # (e.g. OBS's own post-build install check, which uses raw rpm
+        # rather than zypper) won't have zypper available to self-install
+        # this dependency, even though a real `zypper install flux-vprint`
+        # always resolves it correctly via the package's own Requires.
+        # Skip firmware fetch gracefully rather than failing the whole
+        # package activation over a step that can be re-run later.
+        echo -e "${YELLOW}[!]${NC} Skipping firmware fetch for now."
+        echo -e "${YELLOW}[!]${NC} Install 'innoextract' and re-run 'sudo flux-vprint fetch-fw' when ready."
+        exit 0
     fi
 fi
 
