@@ -27,6 +27,14 @@ sudo zypper in flux-vprint
 
 That's it — installing the package automatically configures PAM and fetches the required firmware for you. You're ready to enroll a fingerprint.
 
+> **Note:** `flux-vprint` intentionally replaces the stock `fprintd` D-Bus service registration with its own (`open-fprintd`), since that's what makes the `06cb:009a` sensor actually work. Because of this, `zypper` may show a file conflict warning like:
+> ```
+> Detected 2 file conflicts:
+> File /usr/share/dbus-1/system-services/net.reactivated.Fprint.service ...
+> Continue? [yes/no] (no):
+> ```
+> This is expected — answer **yes** to proceed. `flux-vprint` also disables the stock `fprintd.service` automatically during install so the two don't compete.
+
 #### Option 2: Build & Install from Source
 
 If you prefer to build or inspect the source directly:

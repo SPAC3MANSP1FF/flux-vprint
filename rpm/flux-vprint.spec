@@ -1,7 +1,7 @@
 Name:           flux-vprint
-Version:        1.0.1
+Version:        1.0.0
 Release:        1%{?dist}
-Summary:        Turnkey ThinkPad T480 Fingerprint Reader Suite for openSUSE Tumbleweed
+Summary:        Complete ThinkPad T480 Fingerprint Reader Suite for openSUSE Tumbleweed
 License:        GPL-2.0-only AND MIT
 URL:            https://github.com/SPAC3MANSP1FF/flux-vprint
 Source0:        %{name}-%{version}.tar.gz
@@ -23,7 +23,7 @@ Requires:       systemd
 Requires:       udev
 
 %description
-flux-vprint provides a turnkey background service and management tool for
+flux-vprint provides a complete, ready-to-use background service and management tool for
 Validity / Synaptics fingerprint sensors (specifically 06cb:009a on Lenovo ThinkPad T480)
 on openSUSE Tumbleweed.
 It automatically handles firmware extraction, systemd background daemons,
