@@ -1,5 +1,5 @@
 Name:           flux-vprint
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        Complete ThinkPad T480 Fingerprint Reader Suite for openSUSE Tumbleweed
 License:        GPL-2.0-only AND MIT
